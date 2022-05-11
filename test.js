@@ -721,7 +721,7 @@ function onSearchCoin() {
     // if filters
     if (isSearchFilterForCoinsBySelectedOnly()) {
 
-      searchSavedCoins(query);
+      searchSavedCoins(query).then(removeSearchLoadingIcon);
 
     } else {
 
@@ -814,7 +814,7 @@ function isSearchFilterForCoinsBySelectedOnly() {
 
   const filter = getSearchFilterForCoins();
 
-  if (filter === "selected") {
+  if (filter === "saved") {
     return true;
   }
 
