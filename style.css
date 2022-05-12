@@ -56,9 +56,8 @@ body, html {
 
 
 
-#navigationMenu .nav-link {
-  /* width: 10em; */
-  padding: 0 5em;
+#navigationMenu .nav-item {
+  position: relative;
 }
 
 #navigationMenu .navbar-brand {

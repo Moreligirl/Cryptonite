@@ -5,10 +5,12 @@
 
 
 
+
+
 function onNavMenuCoinsPage() {
 
   $("#main-content").load("./pages/coins.html", () => {
-    setTimeout(loadAllCoinsToPage);
+   setTimeout(loadAllCoinsToPage)
     $("#coins-search-btn").on("click", onSearchCoin);
   });
 
@@ -18,7 +20,8 @@ function onNavMenuReportsPage() {
 
   $("#main-content").load("./pages/reports.html", () => {
 
-    // run immediately after page loads
+    //
+    initialiseLiveDataChart();
 
   });
 }
@@ -110,41 +113,160 @@ go make me proud.
 */
 
 
-function getUrlForChartInfoAPI() {
 
-  const savedCoins = getSavedCoinsFromLocalStorage();
-  const savedCoinsSymbols = savedCoins.map(coin => coin.symbol);
-
-  return `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${savedCoinsSymbols.join()}&tsyms=USD`;
-}
-
-function getLiveInfoAboutSavedCoins() {
-
-  const API = getUrlForChartInfoAPI();
-
-  return $.get(API);
-}
-
-function displayChartData(data) {
-
-  console.log(data);
-}
-
-
-function testReport() {
-
+function createSavedCoinsLiveDataChart(coinsSymbols) {
   //
-  getLiveInfoAboutSavedCoins()
-    .done(displayChartData)
-    .done(data => {
-      const interval = setInterval(displayChartData, 1000, data);
 
-      $(document).one("click", ".nav-link", () => {
-        clearInterval(interval);
-      })
+  // chart options - mainly for visuals
+  const options = {
+    backgroundColor: "transparent",
+    axisX: {
+      labelAngle: 0,
+      minimum: Date.now() - 10000 // 10 seconds ago - prevents timestamps of "???ms"
+    },
+    axisY: {
+      prefix: "$",
+      gridColor: "rgba(0, 0, 0, 0.1)"
+    },
+    toolTip: {
+      shared: true
+    },
+    legend: {
+      cursor: "pointer",
+      verticalAlign: "top",
+      fontSize: 22,
+      fontColor: "dimGrey",
+      itemclick: toggleDataSeries
+    },
+    data: [] // set dynamically below
+  };
+
+
+  // fill chart with starter data
+  coinsSymbols.forEach(coin => {
+
+    options.data.push({
+      type: "line",
+      name: coin.toUpperCase(),
+      xValueType: "dateTime",
+      xValueFormatString: "hh:mm:ss TT",
+      showInLegend: true,
+      markerSize: 0,
+      dataPoints: []
     });
 
+  });
+
+
+  // create chart object
+  $("#liveReports").CanvasJSChart(options);
+
 }
+
+function toggleDataSeries(e) {
+  if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+    e.dataSeries.visible = false;
+  } else {
+    e.dataSeries.visible = true;
+  }
+  e.chart.render();
+}
+
+
+
+
+function updateChart(dataAPI) {
+  $.get(dataAPI).done(updateSavedCoinsLiveDataChart);
+}
+
+
+function initialiseLiveDataChart() {
+  
+  const savedCoinsSymbols = getSavedCoinsFromLocalStorage().map(coin => coin.symbol);
+  const liveDataAPI = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${savedCoinsSymbols.join()}&tsyms=USD`;
+
+  createSavedCoinsLiveDataChart(savedCoinsSymbols);
+
+  // first API call - since the next ones will have a 2 second delay
+updateChart(liveDataAPI);
+  // set it up for the chart to update every 2 seconds starting now
+  const updateChartInterval = setInterval(updateChart, 2000, liveDataAPI);
+
+  stopIntervalOnUserChangePage(updateChartInterval);
+  //
+}
+
+function stopIntervalOnUserChangePage(interval) {
+
+  $(document).one("click", ".nav-link:not(#nav-reports)", () => {
+    clearInterval(interval);
+  });
+}
+
+// for each in result
+// find graph where symbol
+// update there
+function updateSavedCoinsLiveDataChart(liveData) {
+
+  const time = Date.now();
+  const chart = $("#liveReports").CanvasJSChart();
+
+  chart.options.data.forEach(series => {
+
+    const coin = series.name;
+    const coinPrice = liveData[coin];
+
+    if (coinPrice !== undefined) { // possibly undefined
+
+      series.dataPoints.push({
+        x: time,
+        y: coinPrice.USD
+      });
+
+    }
+
+  });
+
+  chart.render();
+
+}
+
+
+// function getUrlForChartInfoAPI() {
+
+//   const savedCoins = getSavedCoinsFromLocalStorage();
+//   const savedCoinsSymbols = savedCoins.map(coin => coin.symbol);
+
+//   return `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${savedCoinsSymbols.join()}&tsyms=USD`;
+// }
+
+// function getLiveInfoAboutSavedCoins() {
+
+//   const API = getUrlForChartInfoAPI();
+
+//   return $.get(API);
+// }
+
+// function displayChartData(data) {
+
+//   console.log(data);
+// }
+
+
+// function testReport() {
+
+//   //
+//   getLiveInfoAboutSavedCoins()
+//     .done(displayChartData)
+//     .done(data => {
+//       const interval = setInterval(displayChartData, 1000, data);
+
+//       $(document).one("click", ".nav-link", () => {
+//         clearInterval(interval);
+//       })
+//     });
+
+// }
 
 
 
@@ -420,7 +542,7 @@ function addCoinCardToPage(coinInformation, parentElement) {
 function displayAllCoins(coins, parentElement) {
 
   coins.forEach(coin => {
-    addCoinCardToPage(coin, parentElement);
+    setTimeout(() => addCoinCardToPage(coin, parentElement));
   });
 
   // for (let i = 0; i < 100; i++) { // for development
@@ -715,7 +837,6 @@ function onSearchCoin() {
 
     // get query
     const query = getSearchQueryForCoins();
-    const filter = getSearchFilterForCoins();
 
 
     // if filters
