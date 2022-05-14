@@ -520,7 +520,7 @@ $(function () {
 
 
   function getSearchQueryForCoins() {
-    return $("#coins-searchbar").val().toLowerCase();
+    return $("#coins-searchbar").val().trim().toLowerCase();
   }
 
   function getSearchFilterForCoins() {
