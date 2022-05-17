@@ -619,7 +619,7 @@ $(function () {
   function displaySearchLoadingIcon() {
     $("#coins-search-btn")
       .prop("disabled", true)
-      .text("Loading...")
+      .text("Searching...")
       .prepend(`<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>`);
   }
 
