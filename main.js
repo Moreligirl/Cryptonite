@@ -355,7 +355,7 @@ $(function () {
 
   // display DOM
 
-  function displayCoinCardToPage(coinInformation, parentElement) {
+  function addCoinCardToPage(coinInformation, parentElement) {
 
     createCoinCard(coinInformation)
       .attr("id", `coin-${coinInformation.id}`)
@@ -363,10 +363,21 @@ $(function () {
 
   }
 
-  function displayAllCoinCards(coins, parentElement) {
+  function displayAllCoinCards(coins) {
 
-    coins.forEach(coin => {
-      setTimeout(() => displayCoinCardToPage(coin, parentElement)); // settimeout helps prevent the huge lag from rendering over 10k blocks of dynamically created html
+    return new Promise((resolve) => {
+
+      const parentElement = $(`<div class="row row-cols-1 row-cols-md-3 g-3 p-0 m-0" id="coin-list-container"></div>`);
+
+      coins.forEach(coin => {
+        setTimeout(() => addCoinCardToPage(coin, parentElement)); // settimeout helps prevent the huge lag from rendering over 10k blocks of dynamically created html
+      });
+
+      setTimeout(() => {
+        $("#coin-list-container").replaceWith(parentElement);
+        resolve();
+      });
+
     });
 
   }
@@ -378,6 +389,203 @@ $(function () {
 
 
   // loaders
+
+  function displayCoinsLoading() {
+
+    $("#coin-list-container").replaceWith(`
+    <div class="row row-cols-1 row-cols-md-3 g-3 p-0 m-0" id="coin-list-container">
+
+  <!-- placeholders will be removed once loading is finished -->
+
+  <!-- card placeholder 1 -->
+
+  <div class="col">
+    <div class="card coinCard h-100 placeholder-glow">
+      <div class="card-body">
+        <div class="coin-basic-information">
+
+          <div class="float-end ms-3">
+            <div class="form-check form-switch form-switch-lg">
+              <div class="form-check-input placeholder"></div>
+            </div>
+          </div>
+
+          <h3 class="card-title placeholder col-4"></h3>
+
+          <p class="card-text">
+            <span class="placeholder col-3"></span>
+            <span class="placeholder col-2"></span>
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-6"></span>
+          </p>
+
+        </div>
+
+        <div class="coin-additional-information">
+          <div class="btn btn-primary disabled placeholder mt-3 col-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- card placeholder 2 -->
+
+  <div class="col">
+    <div class="card coinCard h-100 placeholder-glow">
+      <div class="card-body">
+        <div class="coin-basic-information">
+          <div class="float-end ms-3">
+            <div class="form-check form-switch form-switch-lg">
+              <div class="form-check-input placeholder"></div>
+            </div>
+          </div>
+
+          <h3 class="card-title placeholder col-3"></h3>
+
+          <p class="card-text">
+            <span class="placeholder col-2"></span>
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-3"></span>
+          </p>
+        </div>
+
+        <div class="coin-additional-information">
+          <div class="btn btn-primary disabled placeholder mt-3 col-3"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- card placeholder 3 -->
+
+  <div class="col">
+    <div class="card coinCard h-100 placeholder-glow">
+      <div class="card-body">
+        <div class="coin-basic-information">
+
+          <div class="float-end ms-3">
+            <div class="form-check form-switch form-switch-lg">
+              <div class="form-check-input placeholder"></div>
+            </div>
+          </div>
+
+          <h3 class="card-title placeholder col-4"></h3>
+
+          <p class="card-text">
+            <span class="placeholder col-3"></span>
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-5"></span>
+          </p>
+
+        </div>
+
+        <div class="coin-additional-information">
+          <div class="btn btn-primary disabled placeholder mt-3 col-3"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- card placeholder 4 -->
+
+  <div class="col">
+    <div class="card coinCard h-100 placeholder-glow">
+      <div class="card-body">
+        <div class="coin-basic-information">
+
+          <div class="float-end ms-3">
+            <div class="form-check form-switch form-switch-lg">
+              <div class="form-check-input placeholder"></div>
+            </div>
+          </div>
+
+          <h3 class="card-title placeholder col-3"></h3>
+
+          <p class="card-text">
+            <span class="placeholder col-2"></span>
+            <span class="placeholder col-1"></span>
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-2"></span>
+          </p>
+
+        </div>
+
+        <div class="coin-additional-information">
+          <div class="btn btn-primary disabled placeholder mt-3 col-3"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- card placeholder 5 -->
+
+  <div class="col">
+    <div class="card coinCard h-100 placeholder-glow">
+      <div class="card-body">
+        <div class="coin-basic-information">
+          <div class="float-end ms-3">
+            <div class="form-check form-switch form-switch-lg">
+              <div class="form-check-input placeholder"></div>
+            </div>
+          </div>
+
+          <h3 class="card-title placeholder col-4"></h3>
+
+          <p class="card-text">
+            <span class="placeholder col-2"></span>
+            <span class="placeholder col-5"></span>
+            <span class="placeholder col-3"></span>
+            <span class="placeholder col-4"></span>
+          </p>
+
+        </div>
+
+        <div class="coin-additional-information">
+          <div class="btn btn-primary disabled placeholder mt-3 col-3"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- card placeholder 6 -->
+
+  <div class="col">
+    <div class="card coinCard h-100 placeholder-glow">
+      <div class="card-body">
+        <div class="coin-basic-information">
+
+          <div class="float-end ms-3">
+            <div class="form-check form-switch form-switch-lg">
+              <div class="form-check-input placeholder"></div>
+            </div>
+          </div>
+
+          <h3 class="card-title placeholder col-2"></h3>
+
+          <p class="card-text">
+            <span class="placeholder col-3"></span>
+            <span class="placeholder col-1"></span>
+            <span class="placeholder col-2"></span>
+          </p>
+
+        </div>
+
+        <div class="coin-additional-information">
+          <div class="btn btn-primary disabled placeholder mt-3 col-3"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- end loaders -->
+</div>
+    `)
+  }
 
   function displayLoadingScreenForMoreInfo(parentElement) {
 
@@ -452,6 +660,18 @@ $(function () {
   `);
   }
 
+  function displayMessageForNoSearchResults() {
+
+    $("#coin-list-container").replaceWith(`
+<div id="coin-list-container" class="row gx-0 gy-2 p-2 m-0">
+  <div class="col">
+    <div class="alert alert-warning fst-italic">
+      We were unable to find any results that match your criteria.
+    </div>
+  </div>
+</div>
+    `);
+  }
 
 
   // local storage
@@ -500,22 +720,44 @@ $(function () {
 
   // search functionality
 
-  function onSearchCoin() {
+  async function onSearchCoin() {
 
-    $("#no-results").hide();
-    displaySearchLoadingIcon();
+    try {
+      $("#no-results").hide();
+      displaySearchLoadingIcon();
+      displayCoinsLoading();
 
-    setTimeout(() => {
       const query = getSearchQueryForCoins();
+      const filter = getSearchFilterForCoins();
 
-      // depending on filters, search
-      if (isSearchFilterForCoinsBySelectedOnly()) {
-        searchSavedCoins(query).then(removeSearchLoadingIcon);
+      let coins;
+      if (filter === "all") {
+        coins = await getAllCoins();
+
+      } else { // filter === "saved"
+        coins = getSavedCoinsFromLocalStorage();
+      }
+
+      let filteredCoins;
+
+      if (query === "") {
+        filteredCoins = coins;
 
       } else {
-        searchAllCoins(query).then(removeSearchLoadingIcon);
+        filteredCoins = await searchCoins(coins, query);
       }
-    });
+
+      await displayAllCoinCards(filteredCoins);
+
+    } catch {
+
+      displayMessageForNoSearchResults();
+
+    } finally {
+
+      removeSearchLoadingIcon();
+
+    }
   }
 
 
@@ -527,69 +769,27 @@ $(function () {
     return $("#coins-filtermenu").val();
   }
 
-  function isSearchFilterForCoinsBySelectedOnly() {
-
-    const filter = getSearchFilterForCoins();
-
-    if (filter === "saved") {
-      return true;
-    }
-
-    // (filter === "all")
-    return false;
-  }
 
 
-  function searchAllCoins(query) {
+  function searchCoins(allCoins, query) {
 
-    return new Promise((resolve) => {
-
-      const allCoins = $("#coin-list-container").children().hide();
+    return new Promise((resolve, reject) => {
 
       // get only relevant coins
-      const filteredCoins = allCoins.filter(function () {
-        const currentCoinSymbol = $(this).attr("data-coin-symbol").toLowerCase();
-        return currentCoinSymbol.includes(query);
+      const filteredCoins = allCoins.filter(coin => {
+
+        const currentCoinSymbol = coin.symbol.toLowerCase();
+
+        return (currentCoinSymbol.includes(query));
       });
 
       // if no results, display an appropriate message
-      if (filteredCoins.length === 0) {
-        $("#no-results").show();
+      if (filteredCoins.length > 0) {
+        resolve(filteredCoins);
 
       } else {
-        filteredCoins.show();
+        reject(); // reject
       }
-
-      resolve();
-    });
-  }
-
-  function searchSavedCoins(query) {
-
-    return new Promise((resolve) => {
-
-      const allCoins = $("#coin-list-container").children().hide();
-
-      // get only relevant coins
-      const filteredCoins = allCoins.filter(function () {
-
-        const currentCoinSymbol = $(this).attr("data-coin-symbol").toLowerCase();
-
-        const currentCoinId = $(this).attr("data-coin-id");
-        const coinIsSaved = checkIfCoinIsSaved(currentCoinId);
-
-        return (coinIsSaved && currentCoinSymbol.includes(query));
-      });
-
-      // if no results, display an appropriate message
-      if (filteredCoins.length === 0) {
-        $("#no-results").show();
-
-      } else {
-        filteredCoins.show();
-      }
-
-      resolve();
     });
   }
 
@@ -740,14 +940,12 @@ $(function () {
 
   function loadAllCoinsToPage() {
     // display loading bar
-    const coinListContainer = $("#coin-list-container")
+    // const coinListContainer = $("#coin-list-container")
 
     // get coins from server
     getAllCoins()
-      // then hide the loading bar
-      .finally(() => coinListContainer.empty())
       // then if successful, display coins
-      .then(allCoins => displayAllCoinCards(allCoins, coinListContainer))
+      .then(allCoins => displayAllCoinCards(allCoins))
       // then if unsuccessful, display an error
       .catch(displayErrorForFetchingAllCoins);
   }
