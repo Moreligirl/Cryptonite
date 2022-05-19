@@ -858,7 +858,8 @@ $(function () {
       },
       axisY: {
         prefix: "$",
-        gridColor: "rgba(0, 0, 0, 0.1)"
+        gridColor: "rgba(0, 0, 0, 0.1)",
+        minimum: 0
       },
       toolTip: {
         shared: true
@@ -995,7 +996,5 @@ $(function () {
 
   onNavMenuCoinsPage();
 
-  // it's been a pleasure serving with you, chief.
-  // I'm going to sleep.
 
 });
